@@ -5,21 +5,21 @@ chmod 0644 /etc/cron.d/*
 
 echo "=====BEFORE UPDATE====="
 
-# Update and install necessary packages
-apt clean
-apt-get update && apt-get upgrade -y && apt-get install -y \
-    python3 \
-    python3-venv \
-    python3-pip \
-    nodejs \
-    openssh-server \
-    sudo \
-    curl \
-    wget \
-    git \
-    ffmpeg \
-    supervisor \
-    cron
+# Update and install necessary packages in one go
+apt-get update && apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends \
+        python3 \
+        python3-venv \
+        python3-pip \
+        nodejs \
+        openssh-server \
+        sudo \
+        curl \
+        wget \
+        git \
+        ffmpeg \
+        supervisor \
+        cron
 
 echo "=====MID UPDATE====="
 
