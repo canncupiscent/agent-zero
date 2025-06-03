@@ -9,7 +9,7 @@ pip install playwright
 # install chromium with dependencies
 # for kali-based
 if [ "$@" = "hacking" ]; then
-    apt-get install -y fonts-unifont libnss3 libnspr4
+    apt-get install -y --no-install-recommends fonts-unifont libnss3 libnspr4
     playwright install chromium-headless-shell
 else
     # for debian based

@@ -1,19 +1,22 @@
-# Use the latest slim version of Debian
-FROM debian:bookworm-slim
+# Use the official Python image with a slim Debian base
+FROM python:3.11-slim
 
 # Check if the argument is provided, else throw an error
 ARG BRANCH
 RUN if [ -z "$BRANCH" ]; then echo "ERROR: BRANCH is not set!" >&2; exit 1; fi
 ENV BRANCH=$BRANCH
 
-# Set locale to en_US.UTF-8 and timezone to UTC
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y locales tzdata
-RUN sed -i -e 's/# \(en_US\.UTF-8 .*\)/\1/' /etc/locale.gen && \
+# Set locale to en_US.UTF-8 and timezone to UTC in a single layer
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        locales tzdata && \
+    sed -i -e 's/# \(en_US\.UTF-8 .*\)/\1/' /etc/locale.gen && \
     dpkg-reconfigure --frontend=noninteractive locales && \
-    update-locale LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8
-RUN ln -sf /usr/share/zoneinfo/UTC /etc/localtime
-RUN echo "UTC" > /etc/timezone
-RUN dpkg-reconfigure -f noninteractive tzdata
+    update-locale LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8 && \
+    ln -sf /usr/share/zoneinfo/UTC /etc/localtime && \
+    echo "UTC" > /etc/timezone && \
+    dpkg-reconfigure -f noninteractive tzdata && \
+    rm -rf /var/lib/apt/lists/*
 ENV LANG=en_US.UTF-8
 ENV LANGUAGE=en_US:en
 ENV LC_ALL=en_US.UTF-8
